@@ -1,0 +1,3 @@
+- git:
+    local-name: libsegwayrmp
+    uri: https://github.com/utexas-bwi/libsegwayrmp.git

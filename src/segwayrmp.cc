@@ -13,7 +13,7 @@
 #endif
 
 inline void
-defaultSegwayStatusCallback(segwayrmp::SegwayStatus::Ptr &segway_status)
+defaultSegwayStatusCallback(segwayrmp::SegwayStatus::Ptr segway_status)
 {
   std::cout << "Segway Status:" << std::endl << std::endl
             << segway_status->str() << std::endl << std::endl;
@@ -37,9 +37,6 @@ inline void defaultErrorMsgCallback(const std::string &msg)
 // This is from ROS's walltime function
 // http://www.ros.org/doc/api/rostime/html/time_8cpp_source.html
 inline segwayrmp::SegwayTime defaultTimestampCallback()
-#ifndef WIN32
-throw(segwayrmp::NoHighPerformanceTimersException)
-#endif
 {
   segwayrmp::SegwayTime st;
 #ifndef WIN32
@@ -228,6 +225,7 @@ SegwayRMP::SegwayRMP(InterfaceType interface_type,
   error_(defaultErrorMsgCallback),
   handle_exception_(defaultExceptionCallback)
 {
+  
   this->segway_status_ = SegwayStatus::Ptr(new SegwayStatus());
   this->interface_type_ = interface_type;
   switch (interface_type) {
@@ -260,6 +258,7 @@ SegwayRMP::SegwayRMP(InterfaceType interface_type,
   // Set the constants based on the segway type
   this->SetConstantsBySegwayType_(this->segway_rmp_type_);
 }
+
 
 SegwayRMP::~SegwayRMP()
 {
@@ -822,7 +821,7 @@ getInt(unsigned char lhigh, unsigned char llow,
        unsigned char hhigh, unsigned char hlow)
 {
   int result = 0;
-  char data[4] = {llow, lhigh, hlow, hhigh};
+  unsigned char data[4] = {llow, lhigh, hlow, hhigh};
   memcpy(&result, data, 4);
   return result;
 }
